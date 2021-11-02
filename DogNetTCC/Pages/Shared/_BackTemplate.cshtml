@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" lang="pt-br" />    
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>DogNet:: Área Administrativa</title>
+</head>
+<body>
+    <header class="bg-dark">
+        <div class="container">
+            <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+                <a class="navbar-brand" asp-page="/Index">DogNet</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" asp-area="" asp-page="/Admin/Admin">Área Administrativa</a>
+                        <a class="nav-item nav-link" asp-area="" asp-page="/Admin/PedidoAdmin/Listar">Pedidos</a>
+                        <a class="nav-item nav-link" asp-area="" asp-page="/Admin/ProdutoCRUD/Listar">Produtos</a>
+                        <a class="nav-item nav-link" asp-area="" asp-page="/Admin/ClienteCRUD/Listar">Clientes</a>
+                        <a class="nav-item nav-link" asp-area="" asp-page="/Admin/InstituicoesCRUD/Listar">Instituições</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <section class="container" style="padding-bottom:72px;">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </section>
+    <footer class="footer bg-light text-center p-4 fixed-bottom">
+        <div class="container">
+            <span class="text-dark">Copyright &copy; 2021 - Todos os direitos reservados</span>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,257 @@
+﻿@page
+@model DogNet.Views.CarrinhoModel
+@{
+    ViewData["titulo"] = "Carrinho de Compras";
+}
+
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+    <title>Modals | CORK - Multipurpose Bootstrap Dashboard Template </title>
+    <link rel="icon" type="image/x-icon" href="~/Cork-Templete-Main/HTML/ltr/collapsible-light-menu/assets/img/favicon.ico">
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Cork-Templete-Main/HTML/ltr/collapsible-light-menu/assets/css/plugins.css" rel="stylesheet" type="text/css">
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link href="~/Cork-Templete-Main/HTML/ltr/collapsible-light-menu/plugins/animate/animate.css" rel="stylesheet" type="text/css">
+    <!-- END PAGE LEVEL PLUGINS -->
+    <!--  BEGIN CUSTOM STYLE FILE  -->
+    <link href="~/Cork-Templete-Main/HTML/ltr/collapsible-light-menu/assets/css/scrollspyNav.css" rel="stylesheet" type="text/css">
+    <link href="~/Cork-Templete-Main/HTML/ltr/collapsible-light-menu/assets/css/components/custom-modal.css" rel="stylesheet" type="text/css">
+    <!--  END CUSTOM STYLE FILE  -->
+
+    <style>
+        .btn-dark {
+            color: #fff;
+            background-color: #343a40;
+            border-color: #343a40;
+            font-size: 13px;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="card">
+        <div class="card-header bg-danger text-light">
+            <div class="row">
+                <div class="col-8">
+                    <h4 class="m-0">
+                        <svg class="bi" width="32" height="32" fill="currentColor">
+                            <use xlink:href="bi.svg#cart3" />
+                        </svg>
+                        @ViewData["titulo"]
+                    </h4>
+                </div>
+                <div class="col-4 text-right">
+                    <a asp-page="/Index" class="btn btn-outline-light btn-sm pull-right">Continuar Comprando</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            @if ((Model.Pedido != null) && (Model.Pedido.ItensPedido.Count > 0))
+            {
+                @foreach (var item in Model.Pedido.ItensPedido)
+                {
+
+                    var caminhoArquivoImagem = System.IO.Path.Combine(
+                        "img\\produto",
+                        item.IdProduto.ToString("D6") + ".jpg");
+
+                    <div class="row" id="@($"divItem{item.IdProduto}")">
+                        <div class="col-sm-3 col-md-2 text-center mb-2 mb-sm-0">
+                            <img class="img-thumbnail" src="@caminhoArquivoImagem">
+                        </div>
+                        <div class="col-sm-9 col-md-4 col-lg-5 text-left">
+                            <h4 class="product-name"><strong>@item.Produto.Nome</strong></h4>
+                            <h4>
+                                <small>@item.Produto.Descricao</small>
+                            </h4>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-5">
+                            <div class="row">
+                                <div class="col-4 text-md-right pt-2 text-right">
+                                    <h6>
+                                        <strong id="@($"valorUnit{item.IdProduto}")">R$ @item.ValorUnitario.ToString("F2")</strong>
+                                        <b><span class="text-muted">x</span></b>
+                                    </h6>
+                                </div>
+                                <div class="col-5">
+                                    <div name="@item.IdProduto">
+                                        <input type="number" step="1" max="99" min="1" value="@item.Quantidade" title="Quantidade"
+                                               class="border-dark px-1 input-spinner" name="@item.IdProduto">
+                                    </div>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <button type="button" class="btn btn-outline-danger btn-xs btn-del" name="@item.IdProduto">
+                                        <svg class="bi" width="24" height="24" fill="currentColor">
+                                            <use xlink:href="bi.svg#trash" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="col-9 mr-auto text-right mt-1 text-muted">
+                                    <b id="@($"valorItem{item.IdProduto}")">R$ @item.ValorItem.ToString("F2")</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr id="@($"sepItem{item.IdProduto}")">
+                }
+            }
+            else
+            {
+                <h3>Seu Carrinho de Compras está vazio.</h3>
+            }
+        </div>
+
+            <div class="modal fade show" id="modalDoacao" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">ESCOLHA UM PRODUTO PARA DOAÇÃO</h5>
+                        </div>
+                        <div class="modal-body">
+                            @foreach (var item in Model.Pedido.ItensPedido)
+                            {
+                                <div class="n-chk">
+                                    <label class="new-checkbox-rounded new-checkbox checkbox-primary">
+                                        <input type="checkbox" class="new-control-input" checked>
+                                        <span class="new-control-indicator"></span>@item.Produto.Nome
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal"><i class="flaticon-cancel-12"></i> Cancelar</button>
+                            <button class="btn" data-dismiss="modal"><i class="flaticon-cancel-12"></i> Doar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer text-right">
+                <div class="pull-right">
+                    <div class="pull-right mb-2">
+                        Valor Total: <b id="valorPedido">R$ @(Model.TotalPedido.ToString("F2"))</b>
+                    </div>
+
+
+
+                    @if (Model.Pedido?.ItensPedido?.Count > 0)
+                    {
+
+                        <div class="btn-group" role="group">
+                            <button id="btnGroupVerticalDrop2" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=" height: 32px;">
+                                Faça uma doação
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop2" style="will-change: transform;">
+                                @foreach (var item in Controllers.FrontSupport.SelectInfoInst())
+                                {
+                                    @*<a class="dropdown-item" href="#">@Html.DisplayNameFor(m => m.Instituicoes[0].Nome)</a>*@
+                                    <a class="dropdown-item" data-toggle="modal" data-target="#modalDoacao">@item.Nome</a>
+                                }
+                            </div>
+                        </div>
+
+
+                        <a asp-page="/ConfirmarPedido" class="btn btn-sm btn-success pull-right">Fechar Pedido</a>
+                    }
+                    <a asp-page="/Index" class="btn btn-outline-danger btn-sm pull-right">Continuar Comprando</a>
+
+                </div>
+            </div>
+        </div>
+
+        @section Scripts {
+
+            <script src="assets/js/libs/jquery-3.1.1.min.js"></script>
+            <script src="bootstrap/js/popper.min.js"></script>
+            <script src="bootstrap/js/bootstrap.min.js"></script>
+            <script src="plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+            <script src="assets/js/app.js"></script>
+            <script>
+                $(document).ready(function () {
+                    App.init();
+                });
+            </script>
+            <script src="plugins/highlight/highlight.pack.js"></script>
+            <script src="assets/js/custom.js"></script>
+            <script src="assets/js/scrollspyNav.js"></script>
+            <script>
+                $('#yt-video-link').click(function () {
+                    var src = 'https://www.youtube.com/embed/YE7VzlLtp-4';
+                    $('#videoMedia1').modal('show');
+                    $('<iframe>').attr({
+                        'src': src,
+                        'width': '560',
+                        'height': '315',
+                        'allow': 'encrypted-media'
+                    }).css('border', '0').appendTo('#videoMedia1 .video-container');
+                });
+                $('#vimeo-video-link').click(function () {
+                    var src = 'https://player.vimeo.com/video/1084537';
+                    $('#videoMedia2').modal('show');
+                    $('<iframe>').attr({
+                        'src': src,
+                        'width': '560',
+                        'height': '315',
+                        'allow': 'encrypted-media'
+                    }).css('border', '0').appendTo('#videoMedia2 .video-container');
+                });
+                $('#videoMedia1 button, #videoMedia2 button').click(function () {
+                    $('#videoMedia1 iframe, #videoMedia2 iframe').removeAttr('src');
+                });
+            </script>
+            <script src="~/lib/bootstrap-input-spinner.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+            <script>
+        $("input[type='number']").inputSpinner();
+        $(".input-spinner").change(function () {
+            var qtde = $(this).val();
+            var prod = $(this).attr("name");
+
+            $.post("/api/CarrinhoApi/AtualizarItemCarrinho",
+                {
+                    idCarrinho: Cookies.get("@Model.COOKIE_NAME"),
+                    idProduto: prod,
+                    quantidade: qtde
+                },
+                function (data, status) {
+                    if (status == "success") {
+                        if (!data) return;
+                        $("#valorPedido").text(data.v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+                        var idValorItem = "#valorItem" + data.item.id;
+                        $(idValorItem).text(data.item.v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+                    }
+                }
+            );
+        });
+
+        $(".btn-del").click(function () {
+            var prod = $(this).attr("name");
+
+            $.post("/api/CarrinhoApi/ExcluirItemCarrinho",
+                {
+                    idCarrinho: Cookies.get("@Model.COOKIE_NAME"),
+                    idProduto: prod
+                },
+                function (data, status) {
+                    if (status == "success") {
+                        if (!data) return;
+                        $("#valorPedido").text(data.v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+                        $("#divItem" + data.id).remove();
+                        $("#sepItem" + data.id).remove();
+                        if ($(".btn-del").length == 0) window.location.pathname = "/Carrinho";
+                    }
+                }
+            );
+        });
+            </script>
+        }
+</body>
+</html>
